@@ -7,10 +7,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-  /* Global */
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
@@ -26,11 +23,9 @@
     transition: opacity 1s ease;
   }
 
-  body.loaded {
-    opacity: 1;
-  }
+  body.loaded { opacity: 1; }
 
-  /* Loading Screen */
+  /* Loader */
   #loader {
     position: fixed;
     inset: 0;
@@ -41,38 +36,24 @@
     z-index: 9999;
     transition: opacity 1s ease, visibility 1s ease;
   }
-
-  #loader.fade-out {
-    opacity: 0;
-    visibility: hidden;
-  }
+  #loader.fade-out { opacity: 0; visibility: hidden; }
 
   .spinner {
-    width: 55px;
-    height: 55px;
+    width: 55px; height: 55px;
     border: 5px solid rgba(255,255,255,0.15);
     border-top-color: #ff416c;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  /* Text animations */
+  /* Animations */
   .fade-in-up {
     opacity: 0;
     transform: translateY(20px);
     animation: fadeUp 1s ease forwards;
   }
-
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
   /* Typography */
   .title {
@@ -82,7 +63,6 @@
     background: linear-gradient(to right, #fff, #ccc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation-delay: 0.2s;
   }
 
   .subtitle {
@@ -91,7 +71,6 @@
     background: linear-gradient(90deg, #ff416c, #ffcc70);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation-delay: 0.4s;
   }
 
   .description {
@@ -100,10 +79,9 @@
     text-align: center;
     font-size: 0.95rem;
     margin-bottom: 40px;
-    animation-delay: 0.6s;
   }
 
-  /* Checkpoint cards */
+  /* Container */
   .checkpoint-container {
     display: flex;
     flex-wrap: wrap;
@@ -111,6 +89,7 @@
     justify-content: center;
   }
 
+  /* Cards */
   .checkpoint-card {
     position: relative;
     width: 330px;
@@ -129,19 +108,11 @@
     transform: translateY(25px);
     animation: fadeUpCard 1s ease forwards;
   }
-
-  .checkpoint-card:nth-child(1) {
-    animation-delay: 0.8s;
-  }
-  .checkpoint-card:nth-child(2) {
-    animation-delay: 1s;
-  }
+  .checkpoint-card:nth-child(1) { animation-delay: 0.8s; }
+  .checkpoint-card:nth-child(2) { animation-delay: 1s; }
 
   @keyframes fadeUpCard {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .checkpoint-card::after {
@@ -151,16 +122,11 @@
     background: rgba(0,0,0,0.4);
     transition: 0.3s ease;
   }
-
   .checkpoint-card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 25px rgba(255,255,255,0.15);
   }
-
-  .checkpoint-card:hover::after {
-    background: rgba(0,0,0,0.25);
-    filter: blur(2px);
-  }
+  .checkpoint-card:hover::after { background: rgba(0,0,0,0.25); }
 
   .checkpoint-content {
     position: relative;
@@ -181,45 +147,86 @@
     color: #ddd;
     transition: all 0.25s ease;
   }
-
   .checkpoint-card:hover .duration {
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* Highlight for Linkvertise */
+  .linkvertise-card {
+    border: 3px solid #9b59b6;
+    box-shadow: 0 0 25px rgba(155,89,182,0.6);
+    position: relative;
+  }
+  .linkvertise-card::before {
+    content: "EASY & FAST";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #3498db, #6dd5fa);
+    color: #fff;
+    padding: 4px 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(52,152,219,0.6);
+  }
+  .linkvertise-card::after {
+    background: rgba(0,0,0,0.4);
+  }
+  .linkvertise-card:hover::before {
+    transform: translateX(-50%) scale(1.05);
+  }
+
+  /* Bottom "BEST" Tag */
+  .linkvertise-card .best-tag {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    background: linear-gradient(90deg, #9b59b6, #8e44ad);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(155,89,182,0.6);
+  }
+
 </style>
 </head>
 <body>
-  <!-- Loading Screen -->
-  <div id="loader">
-    <div class="spinner"></div>
-  </div>
+  <!-- Loader -->
+  <div id="loader"><div class="spinner"></div></div>
 
-  <!-- Content -->
+  <!-- Main Content -->
   <h1 class="title fade-in-up">Horizon Hub</h1>
   <h2 class="subtitle fade-in-up">Select Checkpoint</h2>
   <p class="description fade-in-up">
-    Choose a checkpoint to get your key.  
-    You can proceed via <b>Work Ink</b> or <b>Linkvertise</b>.
+    Choose a checkpoint to get your key.<br>
+    You can proceed via <b>Linkvertise</b> or <b>Work Ink</b>.
   </p>
 
   <div class="checkpoint-container">
-    <!-- Work Ink -->
-    <div class="checkpoint-card" 
-         style="background-image: url('https://s3-eu-west-1.amazonaws.com/tpd/logos/60f32c3fa0f0500001ab7c87/0x0.png');"
-         data-url="https://ads.luarmor.net/get_key?for=Horizon_Hub_WorkInk-pkIcjuXfTuEc">
-      <div class="checkpoint-content">
-        <div class="checkpoint-name">Work Ink</div>
-        <div class="duration">1 Checkpoint Key Duration: 4 Hours</div>
-      </div>
-    </div>
-
-    <!-- Linkvertise -->
-    <div class="checkpoint-card"
-         style="background-image: url('https://media.licdn.com/dms/image/v2/D4E0BAQGbZqvPriyjiw/company-logo_200_200/company-logo_200_200/0/1701861184487/linkvertise_logo?e=2147483647&v=beta&t=z2G7POdRWNRnXfjAvg-HGrn4qms6dkRkxRW2MfBzEhE');"
-         data-url="https://ads.luarmor.net/get_key?for=Horizon_Hub_Linkvertise-GtiNyQRETJNr">
+    <!-- Linkvertise FIRST -->
+    <div class="checkpoint-card linkvertise-card"
+      style="background-image: url('https://media.licdn.com/dms/image/v2/D4E0BAQGbZqvPriyjiw/company-logo_200_200/company-logo_200_200/0/1701861184487/linkvertise_logo?e=2147483647&v=beta&t=z2G7POdRWNRnXfjAvg-HGrn4qms6dkRkxRW2MfBzEhE');"
+      data-url="https://ads.luarmor.net/get_key?for=Horizon_Hub_Linkvertise-GtiNyQRETJNr">
       <div class="checkpoint-content">
         <div class="checkpoint-name">Linkvertise</div>
         <div class="duration">1 Checkpoint Key Duration: 6 Hours</div>
+      </div>
+      <div class="best-tag">BEST</div>
+    </div>
+
+    <!-- Work Ink SECOND -->
+    <div class="checkpoint-card"
+      style="background-image: url('https://s3-eu-west-1.amazonaws.com/tpd/logos/60f32c3fa0f0500001ab7c87/0x0.png');"
+      data-url="https://ads.luarmor.net/get_key?for=Horizon_Hub_WorkInk-pkIcjuXfTuEc">
+      <div class="checkpoint-content">
+        <div class="checkpoint-name">Work Ink</div>
+        <div class="duration">1 Checkpoint Key Duration: 4 Hours</div>
       </div>
     </div>
   </div>
@@ -232,7 +239,7 @@
       setTimeout(() => loader.classList.add("fade-out"), 600);
     });
 
-    // Checkpoint redirect logic
+    // Redirect with countdown
     document.querySelectorAll('.checkpoint-card').forEach(card => {
       card.addEventListener('click', () => {
         const url = card.dataset.url;
