@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horizon Hub</title>
+  <meta name="description" content="Horizon Hub - The Best Just Got Better." />
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Prism.js dark theme -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* blue-accent, dark background */
+      --accent: #3b82f6;         /* primary blue */
+      --accent-hover: #1e40af;   /* deep blue on hover */
+      --text-main: #ffffff;
+      --text-subtle: #cfcfcf;
+      --bg-dark: #000000;
+      --glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.06);
+      --shadow: rgba(0, 0, 0, 0.75);
+
+      --bg-dur: 1400ms;
+      --reveal-dur: 900ms;
+      --base-delay: 400ms;
+      --step-delay: 240ms;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 3vw, 28px);
+      background: var(--bg-dark);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow: hidden;
+    }
+
+    /* subtle blue glow background */
+    .bg {
+      position: fixed;
+      inset: -2% -2% -2% -2%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(900px 700px at 10% -10%, rgba(59,130,246,0.18), transparent 38%),
+        radial-gradient(800px 600px at 115% 110%, rgba(14,165,233,0.10), transparent 42%);
+      opacity: 0;
+      transform: scale(1.02);
+      filter: saturate(0.95) blur(0.2px);
+    }
+    .is-ready .bg { animation: bgIn var(--bg-dur) ease forwards; }
+    @keyframes bgIn { to { opacity: 1; transform: none; filter: saturate(1); } }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: color-mix(in oklab, #fff 5%, transparent);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px) saturate(1.05);
+      -webkit-backdrop-filter: blur(18px) saturate(1.05);
+      border-radius: 24px;
+      box-shadow:
+        0 24px 64px var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 900px;
+      text-align: left;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* subtle blue border glow */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.45), rgba(14,165,233,0.28));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .is-ready .card::before {
+      animation: fadeIn 900ms ease forwards;
+      animation-delay: calc(var(--base-delay) + var(--step-delay));
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* Stagger reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px) scale(0.988);
+      will-change: opacity, transform;
+    }
+    .is-ready .reveal {
+      animation: revealUp var(--reveal-dur) cubic-bezier(0.22,1,0.36,1) forwards;
+      animation-delay: var(--delay, 0ms);
+    }
+    @keyframes revealUp { 60% { opacity: 1; } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    .title {
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+      margin-bottom: 6px;
+    }
+    .title:hover { opacity: 0.85; }
+
+    pre.codebox {
+      background: #0f1113;
+      border-radius: 16px;
+      padding: 20px 22px;
+      font-family: ui-monospace, "SFMono-Regular", SFMono, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #e6eefb;
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 520px;
+      white-space: pre;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+
+    /* Scrollbar styling */
+    pre.codebox::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+    pre.codebox::-webkit-scrollbar-track { background: #070707; }
+    pre.codebox::-webkit-scrollbar-thumb {
+      background-color: var(--accent);
+      border-radius: 6px;
+    }
+    pre.codebox::-webkit-scrollbar-corner { background: #0f1113; }
+
+    .copy-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text-subtle);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.28s ease;
+      width: max-content;
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+      border-color: transparent;
+      color: #fff;
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(59,130,246,0.18);
+    }
+    .copy-btn:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(59,130,246,0.12); }
+
+    .card :is(.copy-btn, .title):focus-visible {
+      outline: 3px solid rgba(59,130,246,0.65);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 720px) {
+      .card { padding: 26px 18px; }
+      pre.codebox { font-size: 0.82rem; max-height: 360px; }
+      .copy-btn { width: 100%; justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { overflow: auto; }
+      .bg, .reveal, .card::before { animation: none !important; transform: none !important; opacity: 1 !important; }
+      .copy-btn:hover, .copy-btn:active { transform: none; }
+    }
+
+    ::selection { background: var(--accent); color: #000; }
+  </style>
+
+  <!-- Prism.js (syntax highlighting) -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-lua.min.js"></script>
+</head>
+<body>
+  <!-- Token rotating script kept as-is -->
+  <script>
+  (function () {
+    // === Config ===
+    const CHANGE_EVERY_MS = 300;   // how often to rotate the token
+    const TOKEN_LENGTH   = 10;     // token size
+    const PARAM_NAME     = "PS";   // query param to rotate
+
+    // Better RNG (falls back to Math.random)
+    function randChar() {
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      if (window.crypto && crypto.getRandomValues) {
+        const buf = new Uint8Array(1);
+        crypto.getRandomValues(buf);
+        return chars[buf[0] % chars.length];
+      }
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+    function makeToken(n) {
+      let s = "";
+      for (let i = 0; i < n; i++) s += randChar();
+      return s;
+    }
+
+    function baseUrl() {
+      // Keep origin + root path only
+      return window.location.origin + "/";
+    }
+
+    function setUrl(token) {
+      const url = `${baseUrl()}?${PARAM_NAME}=${token}`;
+      history.replaceState({}, "", url);
+    }
+
+    // Strip any existing query/hash, then start rotating
+    history.replaceState({}, "", baseUrl());
+    setUrl(makeToken(TOKEN_LENGTH));
+    setInterval(() => setUrl(makeToken(TOKEN_LENGTH)), CHANGE_EVERY_MS);
+
+    // Optional: ignore back/forward
+    window.addEventListener("popstate", () => {});
+  })();
+  </script>
+
+  <div class="bg" aria-hidden="true"></div>
+
+  <main class="card reveal" role="main" style="--delay: calc(var(--base-delay));">
+    <button
+      class="title reveal"
+      type="button"
+      data-href="/"
+      style="--delay: calc(var(--base-delay) + var(--step-delay));">
+      Horizon Hub
+    </button>
+
+    <pre class="codebox reveal" style="--delay: calc(var(--base-delay) + var(--step-delay) * 2);"><code class="language-lua" id="code">
+--[[
+
+ ███▄    █  ██▓ ▄████▄  ▓█████    ▄▄▄█████▓ ██▀███ ▓██   ██▓   ▓█████▄  ██▓▓█████▄ ▓█████▄▓██   ██▓
+ ██ ▀█   █ ▓██▒▒██▀ ▀█  ▓█   ▀    ▓  ██▒ ▓▒▓██ ▒ ██▒▒██  ██▒   ▒██▀ ██▌▓██▒▒██▀ ██▌▒██▀ ██▌▒██  ██▒
+▓██  ▀█ ██▒▒██▒▒▓█    ▄ ▒███      ▒ ▓██░ ▒░▓██ ░▄█ ▒ ▒██ ██░   ░██   █▌▒██▒░██   █▌░██   █▌ ▒██ ██░
+▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒▒▓█  ▄    ░ ▓██▓ ░ ▒██▀▀█▄   ░ ▐██▓░   ░▓█▄   ▌░██░░▓█▄   ▌░▓█▄   ▌ ░ ▐██▓░
+▒██░   ▓██░░██░▒ ▓███▀ ░░▒████▒     ▒██▒ ░ ░██▓ ▒██▒ ░ ██▒▓░   ░▒████▓ ░██░░▒████▓ ░▒████▓  ░ ██▒▓░
+░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░░░ ▒░ ░     ▒ ░░   ░ ▒▓ ░▒▓░  ██▒▒▒     ▒▒▓  ▒ ░▓   ▒▒▓  ▒  ▒▒▓  ▒   ██▒▒▒ 
+░ ░░   ░ ▒░ ▒ ░  ░  ▒    ░ ░  ░       ░      ░▒ ░ ▒░▓██ ░▒░     ░ ▒  ▒  ▒ ░ ░ ▒  ▒  ░ ▒  ▒ ▓██ ░▒░ 
+   ░   ░ ░  ▒ ░░           ░        ░        ░░   ░ ▒ ▒ ░░      ░ ░  ░  ▒ ░ ░ ░  ░  ░ ░  ░ ▒ ▒ ░░  
+         ░  ░  ░ ░         ░  ░               ░     ░ ░           ░     ░     ░       ░    ░ ░     
+               ░                                    ░ ░         ░           ░       ░      ░ ░     
+
+]]
+
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66bc6d30278bc08919bec8cde5e15fea.lua"))()
+    </code></pre>
+
+    <button
+      class="copy-btn reveal"
+      type="button"
+      onclick="copyCode()"
+      style="--delay: calc(var(--base-delay) + var(--step-delay) * 3);">
+      Copy Loadstring
+    </button>
+  </main>
+
+  <script>
+    // Fade-in trigger
+    window.addEventListener('load', function () {
+      document.body.classList.add('is-ready');
+    });
+
+    // Title navigation (button = no URL preview on hover)
+    (function () {
+      var titleBtn = document.querySelector('.title[data-href]');
+      if (titleBtn) {
+        titleBtn.addEventListener('click', function () {
+          var href = titleBtn.getAttribute('data-href');
+          if (href) window.location.href = href;
+        });
+      }
+    })();
+
+    function copyCode() {
+      const codeElement = document.getElementById('code');
+      const text = codeElement.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = original, 2000);
+      }).catch(() => {
+        // fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try { document.execCommand('copy'); }
+        catch (e) { /* ignore */ }
+        textarea.remove();
+        const btn = document.querySelector('.copy-btn');
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = original, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
